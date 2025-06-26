@@ -55,6 +55,8 @@ class Comment extends Model
                     }
                     
                     $comment->depth = $newDepth;
+                }else{
+                    throw new \Exception('Parent comment not found');
                 }
             } else {
                 $comment->depth = 0;
