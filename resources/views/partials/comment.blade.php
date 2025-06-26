@@ -1,21 +1,31 @@
 <div class="comment depth-{{ $comment->depth }}">
     <div class="comment-content">
         <div class="d-flex justify-content-between align-items-start">
-            <div>
-                <p class="mb-2">{{ $comment->content }}</p>
-                <small class="text-muted">
-                    {{ $comment->created_at->diffForHumans() }} • 
-                    Depth: {{ $comment->depth }}
-                </small>
+            <div class="flex-grow-1">
+                <p class="mb-0 fs-6 text-dark">{{ $comment->content }}</p>
+                <div class="comment-meta">
+                    <span class="text-muted">
+                        <i class="fas fa-clock"></i>
+                        {{ $comment->created_at->diffForHumans() }}
+                    </span>
+                    <span class="depth-indicator">
+                        <i class="fas fa-layer-group me-1"></i>
+                        Level {{ $comment->depth }}
+                    </span>
+                </div>
             </div>
-            @if($comment->canHaveReplies())
-                <button class="btn btn-sm btn-outline-primary" 
-                        onclick="toggleReplyForm({{ $comment->id }})">
-                    Reply
-                </button>
-            @else
-                <small class="text-muted">Max depth reached</small>
-            @endif
+            <div class="ms-3">
+                @if($comment->canHaveReplies())
+                    <button class="btn btn-sm btn-outline-primary" 
+                            onclick="toggleReplyForm({{ $comment->id }})">
+                        <i class="fas fa-reply me-1"></i>Reply
+                    </button>
+                @else
+                    <small class="text-muted">
+                        <i class="fas fa-ban me-1"></i>Max depth reached
+                    </small>
+                @endif
+            </div>
         </div>
     </div>
 
@@ -28,17 +38,19 @@
                 <div class="mb-3">
                     <textarea class="form-control" 
                               name="content" 
-                              rows="2" 
+                              rows="3" 
                               placeholder="Write your reply..."
                               required></textarea>
                 </div>
-                <div class="d-flex justify-content-end">
+                <div class="d-flex justify-content-end gap-2 mt-5">
                     <button type="button" 
-                            class="btn btn-sm btn-secondary me-2" 
+                            class="btn btn-sm btn-secondary" 
                             onclick="toggleReplyForm({{ $comment->id }})">
-                        Cancel
+                        <i class="fas fa-times me-1"></i>Cancel
                     </button>
-                    <button type="submit" class="btn btn-sm btn-primary">Post Reply</button>
+                    <button type="submit" class="btn btn-sm btn-primary">
+                        <i class="fas fa-paper-plane me-1"></i>Post Reply
+                    </button>
                 </div>
             </form>
         </div>
@@ -46,8 +58,10 @@
 
     <!-- Nested Replies -->
     @if($comment->replies->count() > 0)
-        @foreach($comment->replies as $reply)
-            @include('partials.comment', ['comment' => $reply, 'post' => $post])
-        @endforeach
+        <div class="replies-container">
+            @foreach($comment->replies as $reply)
+                @include('partials.comment', ['comment' => $reply, 'post' => $post])
+            @endforeach
+        </div>
     @endif
 </div>
