@@ -59,7 +59,7 @@ class Comment extends Model
                     throw new \Exception('Parent comment not found');
                 }
             } else {
-                $comment->depth = 0;
+                $comment->depth = 1;
             }
         });
     }
